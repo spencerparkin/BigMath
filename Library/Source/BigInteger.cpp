@@ -1,4 +1,5 @@
 #include "BigInteger.h"
+#include "Helpers.h"
 
 using namespace BigMath;
 
@@ -128,6 +129,18 @@ bool BigInteger::FromBigInteger(const BigInteger& bigInteger, uint32_t desiredBa
 bool BigInteger::ToBigInteger(BigInteger& bigInteger, uint32_t desiredBase)
 {
 	return bigInteger.FromBigInteger(*this, desiredBase);
+}
+
+bool BigInteger::CalcRemainder(uint32_t modulus, uint32_t& remainder) const
+{
+	remainder = 0;
+	for (uint32_t exp = 0; exp < this->digitArray.size(); exp++)
+	{
+		uint32_t digit = this->digitArray[exp];
+		remainder += (digit * BinaryExponentiation(this->base, exp, modulus)) % modulus;
+	}
+
+	return true;
 }
 
 bool BigInteger::DigitToChar(uint32_t digit, char& digitChar) const

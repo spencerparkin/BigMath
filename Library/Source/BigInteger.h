@@ -74,7 +74,16 @@ namespace BigMath
 		bool ToBigInteger(BigInteger& bigInteger, uint32_t desiredBase);
 
 		// TODO: Support addition, subtraction, multiplication and division.
-		// TODO: Support binary exponentiation.
+
+		/**
+		 * Using binary exponentiation, calculate the remainder obtained
+		 * when dividing this big number by the given modulus.
+		 * 
+		 * @param[in] modulus This can also be thought of as the divisor.
+		 * @param[out] remainder This will hold the result.
+		 * @return True is returned if successful; false, otherwise.
+		 */
+		bool CalcRemainder(uint32_t modulus, uint32_t& remainder) const;
 
 	private:
 

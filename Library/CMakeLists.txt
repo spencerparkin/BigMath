@@ -3,6 +3,8 @@
 set(BIG_MATH_LIB_SOURCES
     Source/BigInteger.cpp
     Source/BigInteger.h
+    Source/Helpers.cpp
+    Source/Helpers.h
     Source/BigMath.h
 )
 
