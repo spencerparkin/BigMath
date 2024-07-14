@@ -2,6 +2,8 @@
 
 set(BIG_MATH_TEST_SOURCES
     Source/BigMathTest.cpp
+    Source/BigMathTest.h
+    Source/Main.cpp
 )
 
 source_group("Source" TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${BIG_MATH_TEST_SOURCES})

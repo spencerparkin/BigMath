@@ -1,24 +1,79 @@
-#include "BigInteger.h"
+#include "BigMathTest.h"
 #include <iostream>
 
 using namespace BigMath;
 
-int main(int argc, char** argv)
+//---------------------------------- Test ----------------------------------
+
+Test::Test()
 {
-	BigInteger A, B;
+}
 
-	A.FromInteger(0xDEADBEEF, 16);
+/*virtual*/ Test::~Test()
+{
+}
 
-	std::string numberStringA;
-	A.ToString(numberStringA);
+//---------------------------------- Test64BitConversion ----------------------------------
 
-	B.FromBigInteger(A, 10);
+Test64BitConversion::Test64BitConversion()
+{
+	this->name = "64-bit conversion test";
+}
 
-	std::string numberStringB;
-	B.ToString(numberStringB);
+/*virtual*/ Test64BitConversion::~Test64BitConversion()
+{
+}
 
-	std::cout << numberStringA << std::endl;
-	std::cout << numberStringB << std::endl;
+/*virtual*/ bool Test64BitConversion::Perform()
+{
+	BigInteger bigInt;
 
-	return 0;
+	uint64_t intA = 0xDEADBEEF;
+	if (!bigInt.FromInteger(intA, 16))
+		return false;
+
+	uint64_t intB = 0;
+	if (!bigInt.ToInteger(intB))
+		return false;
+
+	if (intA != intB)
+		return false;
+
+	return true;
+}
+
+//---------------------------------- TestStringConversion ----------------------------------
+
+TestStringConversion::TestStringConversion()
+{
+	this->name = "string conversion test";
+}
+
+/*virtual*/ TestStringConversion::~TestStringConversion()
+{
+}
+
+/*virtual*/ bool TestStringConversion::Perform()
+{
+	BigInteger bigInt;
+
+	std::string stringA = "DEADBEEF";
+	if (!bigInt.FromString(stringA, 16))
+		return false;
+
+	uint64_t intA = 0;
+	if (!bigInt.ToInteger(intA))
+		return false;
+
+	if (intA != 0xDEADBEEF)
+		return false;
+
+	std::string stringB;
+	if (!bigInt.ToString(stringB))
+		return false;
+
+	if (stringB != stringA)
+		return false;
+
+	return true;
 }
