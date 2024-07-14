@@ -5,6 +5,8 @@ namespace BigMath
 {
 	uint32_t BinaryExponentiation(uint32_t base, uint32_t exp, uint32_t modulus)
 	{
+		// It wouldn't be hard to write a non-recursive version of this.  Maybe do that?
+
 		uint32_t result = 0;
 
 		if (exp == 0)

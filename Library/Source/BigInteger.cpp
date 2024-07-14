@@ -90,11 +90,9 @@ bool BigInteger::ToInteger(uint64_t& integer) const
 	for (uint32_t digit : this->digitArray)
 	{
 		uint64_t delta = uint64_t(digit) * basePower;
-		uint64_t room = std::numeric_limits<uint64_t>::max() - integer;
-		if (delta >= room)
+		if (!AccumulateWithOverflowCheck(integer, delta))
 			return false;
 
-		integer += delta;
 		basePower *= this->base;
 	}
 
@@ -141,6 +139,86 @@ bool BigInteger::CalcRemainder(uint32_t modulus, uint32_t& remainder) const
 	}
 
 	return true;
+}
+
+bool BigInteger::Normalize()
+{
+	uint32_t i = 0;
+	while (i < this->digitArray.size())
+	{
+		uint32_t digit = this->digitArray[i];
+		if (digit >= this->base)
+		{
+			uint32_t remainder = digit % this->base;
+			uint32_t quotient = (digit - remainder) / this->base;
+			this->digitArray[i] = remainder;
+
+			if (i + 1 == this->digitArray.size())
+				this->digitArray.push_back(0);
+
+			if (!AccumulateWithOverflowCheck(this->digitArray[i + 1], quotient))
+				return false;
+		}
+
+		i++;
+	}
+
+	while (this->digitArray.back() == 0 && this->digitArray.size() > 1)
+		this->digitArray.pop_back();
+
+	return true;
+}
+
+bool BigInteger::IsLessThan(const BigInteger& bigInteger) const
+{
+	if (this->digitArray.size() < bigInteger.digitArray.size())
+		return true;
+
+	if (this->digitArray.size() > bigInteger.digitArray.size())
+		return false;
+
+	if (this->digitArray.size() == 0)
+		return false;
+
+	for (uint32_t i = uint32_t(this->digitArray.size()) - 1; i >= 0; i--)
+	{
+		uint32_t digitA = this->digitArray[i];
+		uint32_t digitB = bigInteger.digitArray[i];
+		if (digitA < digitB)
+			return true;
+	}
+
+	return false;
+}
+
+bool BigInteger::IsGreaterThan(const BigInteger& bigInteger) const
+{
+	return false;
+}
+
+bool BigInteger::IsEqualTo(const BigInteger& bigInteger) const
+{
+	return false;
+}
+
+bool BigInteger::SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
+{
+	return false;
+}
+
+bool BigInteger::SetAsDifference(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
+{
+	return false;
+}
+
+bool BigInteger::SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
+{
+	return false;
+}
+
+bool BigInteger::SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB, BigInteger& remainder)
+{
+	return false;
 }
 
 bool BigInteger::DigitToChar(uint32_t digit, char& digitChar) const

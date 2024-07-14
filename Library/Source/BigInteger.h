@@ -73,7 +73,72 @@ namespace BigMath
 		 */
 		bool ToBigInteger(BigInteger& bigInteger, uint32_t desiredBase);
 
-		// TODO: Support addition, subtraction, multiplication and division.
+		/**
+		 * Make sure that all digits are less than the base.  This does not
+		 * change the value represented by this big integer.
+		 * 
+		 * Every method of this class assumes its given big integers, whether
+		 * given as an argument to the method, or being the class instance itself,
+		 * are already normalized before the method executes.  A method will
+		 * never produce a big integer that is not normalized as a result.
+		 */
+		bool Normalize();
+
+		/**
+		 * Return true if and only if this big integer is less than the given big integer.
+		 */
+		bool IsLessThan(const BigInteger& bigInteger) const;
+
+		/**
+		 * Return true if and only if this big integer is greater than the given big integer.
+		 */
+		bool IsGreaterThan(const BigInteger& bigInteger) const;
+
+		/**
+		 * Return true if and only if this big integer is equal to the given big integer.
+		 */
+		bool IsEqualTo(const BigInteger& bigInteger) const;
+
+		/**
+		 * Compute the sum of the two given big integers and then set this big
+		 * integer to that result.
+		 * 
+		 * @param[in] bigIntegerA This is the first summand.
+		 * @param[in] bigIntegerB This is the second summand.
+		 * @return True is returned if successful; false, otherwise.
+		 */
+		bool SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB);
+
+		/**
+		 * Compute the difference between the two given big integers and then set this
+		 * big integer to that result.  Of course, this is not a commutative operation.
+		 * 
+		 * @param[in] bigIntegerA This is the first operand.
+		 * @param[in] bigIntegerB This is the second operand.
+		 * @return True is returned if successful; false, otherwise.  We can fail here if the result would be negative.
+		 */
+		bool SetAsDifference(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB);
+
+		/**
+		 * Compute the product of the two given big integers and then set this
+		 * big integer to that result.
+		 * 
+		 * @param[in] bigIntegerA This is the first operand.
+		 * @param[in] bigIntegerB This is the second operand.
+		 * @return True is returned if successful; false, otherwise.
+		 */
+		bool SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB);
+
+		/**
+		 * Compute the quotient between the two given big integers and then set
+		 * this big integer to the result.
+		 * 
+		 * @param[in] bigIntegerA This is the dividend.
+		 * @param[in] bigIntegerB This is the divisor.
+		 * @param[out] remaidner This will be set to the remainder.
+		 * @return True is returned if successful; false, otherwise.
+		 */
+		bool SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB, BigInteger& remainder);
 
 		/**
 		 * Using binary exponentiation, calculate the remainder obtained
@@ -84,8 +149,6 @@ namespace BigMath
 		 * @return True is returned if successful; false, otherwise.
 		 */
 		bool CalcRemainder(uint32_t modulus, uint32_t& remainder) const;
-
-	private:
 
 		/**
 		 * Convert a digit into a human-readable character.
@@ -105,6 +168,7 @@ namespace BigMath
 		 */
 		bool DigitFromChar(uint32_t& digit, const char digitChar) const;
 
+	private:
 		std::vector<uint32_t> digitArray;
 		uint32_t base;
 	};
