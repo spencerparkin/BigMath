@@ -10,6 +10,11 @@ namespace BigMath
 	/**
 	 * These are unsigned integers represented in a 32-bit base with 32-bit digits,
 	 * having an arbitrary number of digits.
+	 * 
+	 * Each method assumes that all big-integer arguments (whether those be given as
+	 * parameters or as given as the this-pointer) are already normalized, and each
+	 * method will never produce an unormalized result.  If an argument is not normalized,
+	 * then we just leave the result of the method as undefined.
 	 */
 	class BIG_MATH_API BigInteger
 	{
@@ -86,22 +91,25 @@ namespace BigMath
 
 		/**
 		 * Return true if and only if this big integer is less than the given big integer.
+		 * The to big integers in question here must be of the same base.
 		 */
 		bool IsLessThan(const BigInteger& bigInteger) const;
 
 		/**
 		 * Return true if and only if this big integer is greater than the given big integer.
+		 * The to big integers in question here must be of the same base.
 		 */
 		bool IsGreaterThan(const BigInteger& bigInteger) const;
 
 		/**
 		 * Return true if and only if this big integer is equal to the given big integer.
+		 * The to big integers in question here must be of the same base.
 		 */
 		bool IsEqualTo(const BigInteger& bigInteger) const;
 
 		/**
 		 * Compute the sum of the two given big integers and then set this big
-		 * integer to that result.
+		 * integer to that result.  The given big integers must be of the same base.
 		 * 
 		 * @param[in] bigIntegerA This is the first summand.
 		 * @param[in] bigIntegerB This is the second summand.
@@ -112,6 +120,7 @@ namespace BigMath
 		/**
 		 * Compute the difference between the two given big integers and then set this
 		 * big integer to that result.  Of course, this is not a commutative operation.
+		 * The given big integers must be of the same base.
 		 * 
 		 * @param[in] bigIntegerA This is the first operand.
 		 * @param[in] bigIntegerB This is the second operand.
@@ -121,7 +130,7 @@ namespace BigMath
 
 		/**
 		 * Compute the product of the two given big integers and then set this
-		 * big integer to that result.
+		 * big integer to that result.  The given big integers must be of the same base.
 		 * 
 		 * @param[in] bigIntegerA This is the first operand.
 		 * @param[in] bigIntegerB This is the second operand.
@@ -131,7 +140,7 @@ namespace BigMath
 
 		/**
 		 * Compute the quotient between the two given big integers and then set
-		 * this big integer to the result.
+		 * this big integer to the result.  The given big integers must be of the same base.
 		 * 
 		 * @param[in] bigIntegerA This is the dividend.
 		 * @param[in] bigIntegerB This is the divisor.
@@ -167,6 +176,15 @@ namespace BigMath
 		 * @return True is returned if successful; false, otherwise.  The resulting digit must be less than our base.
 		 */
 		bool DigitFromChar(uint32_t& digit, const char digitChar) const;
+
+		/**
+		 * The square brackets operator is overloaded here to provide read-only access to
+		 * this big integer's digit array.
+		 * 
+		 * @param[in] i This is exponent for the desired digit.
+		 * @return The desired digit is returned or zero if the given exponent is out of range.
+		 */
+		uint32_t operator[](uint32_t i) const;
 
 	private:
 		std::vector<uint32_t> digitArray;

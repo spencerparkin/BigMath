@@ -171,6 +171,9 @@ bool BigInteger::Normalize()
 
 bool BigInteger::IsLessThan(const BigInteger& bigInteger) const
 {
+	if (this->base != bigInteger.base)
+		return false;
+
 	if (this->digitArray.size() < bigInteger.digitArray.size())
 		return true;
 
@@ -180,10 +183,11 @@ bool BigInteger::IsLessThan(const BigInteger& bigInteger) const
 	if (this->digitArray.size() == 0)
 		return false;
 
-	for (uint32_t i = uint32_t(this->digitArray.size()) - 1; i >= 0; i--)
+	for (uint32_t i = 0; i < this->digitArray.size(); i++)
 	{
-		uint32_t digitA = this->digitArray[i];
-		uint32_t digitB = bigInteger.digitArray[i];
+		uint32_t j = this->digitArray.size() - 1 - i;
+		uint32_t digitA = this->digitArray[j];
+		uint32_t digitB = bigInteger.digitArray[j];
 		if (digitA < digitB)
 			return true;
 	}
@@ -193,17 +197,50 @@ bool BigInteger::IsLessThan(const BigInteger& bigInteger) const
 
 bool BigInteger::IsGreaterThan(const BigInteger& bigInteger) const
 {
-	return false;
+	return bigInteger.IsLessThan(*this);
 }
 
 bool BigInteger::IsEqualTo(const BigInteger& bigInteger) const
 {
-	return false;
+	if (this->base != bigInteger.base)
+		return false;
+
+	if (this->digitArray.size() != bigInteger.digitArray.size())
+		return false;
+
+	for (uint32_t i = 0; i < this->digitArray.size(); i++)
+	{
+		uint32_t digitA = this->digitArray[i];
+		uint32_t digitB = bigInteger.digitArray[i];
+		if (digitA != digitB)
+			return false;
+	}
+
+	return true;
 }
 
 bool BigInteger::SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
 {
-	return false;
+	if (bigIntegerA.base != bigIntegerB.base)
+		return false;
+
+	this->base = bigIntegerA.base;
+
+	uint32_t sizeA = bigIntegerA.digitArray.size();
+	uint32_t sizeB = bigIntegerB.digitArray.size();
+
+	if (sizeA > sizeB)
+		this->digitArray.resize(sizeA);
+	else
+		this->digitArray.resize(sizeB);
+
+	for (uint32_t i = 0; i < this->digitArray.size(); i++)
+		this->digitArray[i] = bigIntegerA[i] + bigIntegerB[i];
+
+	if (!this->Normalize())
+		return false;
+
+	return true;
 }
 
 bool BigInteger::SetAsDifference(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
@@ -253,4 +290,12 @@ bool BigInteger::DigitFromChar(uint32_t& digit, const char digitChar) const
 		return false;
 
 	return digit < this->base;
+}
+
+uint32_t BigInteger::operator[](uint32_t i) const
+{
+	if (i >= this->digitArray.size())
+		return 0;
+
+	return this->digitArray[i];
 }

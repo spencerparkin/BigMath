@@ -31,3 +31,30 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestComparison : public Test
+{
+public:
+	TestComparison();
+	virtual ~TestComparison();
+
+	virtual bool Perform() override;
+};
+
+class TestAddition : public Test
+{
+public:
+	TestAddition();
+	virtual ~TestAddition();
+
+	virtual bool Perform() override;
+};
+
+class TestSubtraction : public Test
+{
+public:
+	TestSubtraction();
+	virtual ~TestSubtraction();
+
+	virtual bool Perform() override;
+};

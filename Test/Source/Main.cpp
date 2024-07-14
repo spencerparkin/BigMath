@@ -6,6 +6,9 @@ int main(int argc, char** argv)
 	std::vector<Test*> testArray;
 	testArray.push_back(new Test64BitConversion());
 	testArray.push_back(new TestStringConversion());
+	testArray.push_back(new TestComparison());
+	testArray.push_back(new TestAddition());
+	testArray.push_back(new TestSubtraction());
 
 	uint32_t passCount = 0;
 	for (Test* test : testArray)
