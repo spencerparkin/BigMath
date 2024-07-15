@@ -94,3 +94,12 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestBaseConversion : public Test
+{
+public:
+	TestBaseConversion();
+	virtual ~TestBaseConversion();
+
+	virtual bool Perform() override;
+};

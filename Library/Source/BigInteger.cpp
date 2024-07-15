@@ -115,13 +115,46 @@ bool BigInteger::FromBigInteger(const BigInteger& bigInteger, uint32_t desiredBa
 		return true;
 	}
 
+#if 0
 	uint64_t intermediateInteger = 0;
 	if (bigInteger.ToInteger(intermediateInteger) && this->FromInteger(intermediateInteger, desiredBase))
 		return true;
+#endif
 
-	// TODO: This will require addition, subtraction, division and binary exponentiation.
+	BigInteger bigIntegerCopy;
+	if (!bigIntegerCopy.FromBigInteger(bigInteger, bigInteger.base))
+		return false;
 
-	return false;
+	BigInteger shift;
+	if (!shift.FromInteger(desiredBase, bigIntegerCopy.base))
+		return false;
+
+	this->digitArray.clear();
+
+	while (!bigIntegerCopy.IsZero())
+	{
+		uint32_t digit = 0;
+		if (!bigIntegerCopy.CalcRemainder(desiredBase, digit))
+			return false;
+
+		this->digitArray.push_back(digit);
+
+		BigInteger remainder;
+		if (!remainder.FromInteger(digit, bigIntegerCopy.base))
+			return false;
+
+		BigInteger diff;
+		if (!diff.SetAsDifference(bigIntegerCopy, remainder))
+			return false;
+
+		if (!bigIntegerCopy.SetAsQuotient(diff, shift, remainder))
+			return false;
+
+		if (!remainder.IsZero())
+			return false;
+	}
+
+	return true;
 }
 
 bool BigInteger::ToBigInteger(BigInteger& bigInteger, uint32_t desiredBase)
@@ -135,7 +168,7 @@ bool BigInteger::CalcRemainder(uint32_t modulus, uint32_t& remainder) const
 	for (uint32_t exp = 0; exp < (uint32_t)this->digitArray.size(); exp++)
 	{
 		uint32_t digit = this->digitArray[exp];
-		remainder += (digit * BinaryExponentiation(this->base, exp, modulus)) % modulus;
+		remainder = (remainder + digit * BinaryExponentiation(this->base, exp, modulus)) % modulus;
 	}
 
 	return true;

@@ -115,6 +115,7 @@ namespace BigMath
 		/**
 		 * Compute the sum of the two given big integers and then set this big
 		 * integer to that result.  The given big integers must be of the same base.
+		 * Neither argument should point to this instance.
 		 * 
 		 * @param[in] bigIntegerA This is the first summand.
 		 * @param[in] bigIntegerB This is the second summand.
@@ -125,7 +126,8 @@ namespace BigMath
 		/**
 		 * Compute the difference between the two given big integers and then set this
 		 * big integer to that result.  Of course, this is not a commutative operation.
-		 * The given big integers must be of the same base.
+		 * The given big integers must be of the same base.  Neither argument should point
+		 * to this instance.
 		 * 
 		 * @param[in] bigIntegerA This is the first operand.
 		 * @param[in] bigIntegerB This is the second operand.
@@ -136,6 +138,7 @@ namespace BigMath
 		/**
 		 * Compute the product of the two given big integers and then set this
 		 * big integer to that result.  The given big integers must be of the same base.
+		 * Neither argument should point to this instance.
 		 * 
 		 * Note that there is a way to get O(n log n) time-complexity here using an FFT,
 		 * but for simplicity of implimentation, we compute this in time O(n^2).
@@ -149,6 +152,7 @@ namespace BigMath
 		/**
 		 * Compute the quotient between the two given big integers and then set
 		 * this big integer to the result.  The given big integers must be of the same base.
+		 * Neither argument should point to this instance.
 		 * 
 		 * @param[in] bigIntegerA This is the dividend.
 		 * @param[in] bigIntegerB This is the divisor.

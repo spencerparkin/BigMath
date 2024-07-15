@@ -367,3 +367,45 @@ TestRemainder::TestRemainder()
 
 	return true;
 }
+
+//---------------------------------- TestBaseConversion ----------------------------------
+
+TestBaseConversion::TestBaseConversion()
+{
+	this->name = "base conversion test";
+}
+
+/*virtual*/ TestBaseConversion::~TestBaseConversion()
+{
+}
+
+/*virtual*/ bool TestBaseConversion::Perform()
+{
+	//std::string numberStringA = "DEADBEEFDEADBEEFDEADBEEF";
+	std::string numberStringA = "DEADBEEF";
+
+	BigInteger bigIntA;
+	if (!bigIntA.FromString(numberStringA, 16))
+		return false;
+
+	BigInteger bigIntB;
+	if (!bigIntB.FromBigInteger(bigIntA, 10))
+		return false;
+
+	std::string numberStringB;
+	if (!bigIntB.ToString(numberStringB))
+		return false;
+
+	BigInteger bigIntC;
+	if (!bigIntC.FromBigInteger(bigIntB, 16))
+		return false;
+
+	std::string numberStringC;
+	if (!bigIntC.ToString(numberStringC))
+		return false;
+
+	if (numberStringC != numberStringA)
+		return false;
+
+	return true;
+}
