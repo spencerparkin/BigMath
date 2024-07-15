@@ -152,7 +152,7 @@ TestAddition::TestAddition()
 	return true;
 }
 
-//---------------------------------- TestAddition ----------------------------------
+//---------------------------------- TestSubtraction ----------------------------------
 
 TestSubtraction::TestSubtraction()
 {
@@ -189,6 +189,43 @@ TestSubtraction::TestSubtraction()
 		return false;
 
 	if (diff != intB - intA)
+		return false;
+
+	return true;
+}
+
+//---------------------------------- TestSubtraction ----------------------------------
+
+TestSubtractionWithBarrow::TestSubtractionWithBarrow()
+{
+}
+
+/*virtual*/ TestSubtractionWithBarrow::~TestSubtractionWithBarrow()
+{
+}
+
+/*virtual*/ bool TestSubtractionWithBarrow::Perform()
+{
+	BigInteger bigIntA, bigIntB;
+
+	uint64_t intA = 900000L;
+	uint64_t intB = 800001L;
+
+	if (!bigIntA.FromInteger(intA, 10))
+		return false;
+
+	if (!bigIntB.FromInteger(intB, 10))
+		return false;
+
+	BigInteger bigIntDiff;
+	if (!bigIntDiff.SetAsDifference(bigIntA, bigIntB))
+		return false;
+
+	uint64_t diff = 0;
+	if (!bigIntDiff.ToInteger(diff))
+		return false;
+
+	if (diff != intA - intB)
 		return false;
 
 	return true;

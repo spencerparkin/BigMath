@@ -9,6 +9,7 @@ int main(int argc, char** argv)
 	testArray.push_back(new TestComparison());
 	testArray.push_back(new TestAddition());
 	testArray.push_back(new TestSubtraction());
+	testArray.push_back(new TestSubtractionWithBarrow());
 
 	uint32_t passCount = 0;
 	for (Test* test : testArray)

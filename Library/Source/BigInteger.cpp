@@ -132,7 +132,7 @@ bool BigInteger::ToBigInteger(BigInteger& bigInteger, uint32_t desiredBase)
 bool BigInteger::CalcRemainder(uint32_t modulus, uint32_t& remainder) const
 {
 	remainder = 0;
-	for (uint32_t exp = 0; exp < this->digitArray.size(); exp++)
+	for (uint32_t exp = 0; exp < (uint32_t)this->digitArray.size(); exp++)
 	{
 		uint32_t digit = this->digitArray[exp];
 		remainder += (digit * BinaryExponentiation(this->base, exp, modulus)) % modulus;
@@ -183,13 +183,15 @@ bool BigInteger::IsLessThan(const BigInteger& bigInteger) const
 	if (this->digitArray.size() == 0)
 		return false;
 
-	for (uint32_t i = 0; i < this->digitArray.size(); i++)
+	for (uint32_t i = 0; i < (uint32_t)this->digitArray.size(); i++)
 	{
-		uint32_t j = this->digitArray.size() - 1 - i;
+		uint32_t j = uint32_t(this->digitArray.size()) - 1 - i;
 		uint32_t digitA = this->digitArray[j];
 		uint32_t digitB = bigInteger.digitArray[j];
 		if (digitA < digitB)
 			return true;
+		else if (digitA > digitB)
+			return false;
 	}
 
 	return false;
@@ -208,7 +210,7 @@ bool BigInteger::IsEqualTo(const BigInteger& bigInteger) const
 	if (this->digitArray.size() != bigInteger.digitArray.size())
 		return false;
 
-	for (uint32_t i = 0; i < this->digitArray.size(); i++)
+	for (uint32_t i = 0; i < (uint32_t)this->digitArray.size(); i++)
 	{
 		uint32_t digitA = this->digitArray[i];
 		uint32_t digitB = bigInteger.digitArray[i];
@@ -226,15 +228,15 @@ bool BigInteger::SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIn
 
 	this->base = bigIntegerA.base;
 
-	uint32_t sizeA = bigIntegerA.digitArray.size();
-	uint32_t sizeB = bigIntegerB.digitArray.size();
+	uint32_t sizeA = (uint32_t)bigIntegerA.digitArray.size();
+	uint32_t sizeB = (uint32_t)bigIntegerB.digitArray.size();
 
 	if (sizeA > sizeB)
 		this->digitArray.resize(sizeA);
 	else
 		this->digitArray.resize(sizeB);
 
-	for (uint32_t i = 0; i < this->digitArray.size(); i++)
+	for (uint32_t i = 0; i < (uint32_t)this->digitArray.size(); i++)
 		this->digitArray[i] = bigIntegerA[i] + bigIntegerB[i];
 
 	if (!this->Normalize())
@@ -245,7 +247,54 @@ bool BigInteger::SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIn
 
 bool BigInteger::SetAsDifference(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
 {
-	return false;
+	if (bigIntegerA.base != bigIntegerB.base)
+		return false;
+
+	if (bigIntegerA.digitArray.size() == 0 || bigIntegerB.digitArray.size() == 0)
+		return false;
+
+	if (bigIntegerA.IsLessThan(bigIntegerB))
+		return false;
+
+	BigInteger bigIntegerACopy;
+	if (!bigIntegerACopy.FromBigInteger(bigIntegerA, bigIntegerA.base))
+		return false;
+
+	this->base = bigIntegerA.base;
+
+	this->digitArray.clear();
+	for (uint32_t i = 0; i < (uint32_t)bigIntegerACopy.digitArray.size(); i++)
+	{
+		uint32_t digitA = bigIntegerACopy[i];
+		uint32_t digitB = bigIntegerB[i];
+
+		if (digitA < digitB)
+		{
+			uint32_t j = 0;
+			for (j = i + 1; j < bigIntegerACopy.digitArray.size(); j++)
+				if (bigIntegerACopy[j] != 0)
+					break;
+
+			if (j == bigIntegerACopy.digitArray.size())
+				return false;
+
+			while (j > i)
+			{
+				bigIntegerACopy.digitArray[j]--;
+				bigIntegerACopy.digitArray[j - 1] += this->base;
+				j--;
+			}
+
+			digitA = bigIntegerACopy[i];
+		}
+
+		this->digitArray.push_back(digitA - digitB);
+	}
+
+	if (!this->Normalize())
+		return false;
+
+	return true;
 }
 
 bool BigInteger::SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)

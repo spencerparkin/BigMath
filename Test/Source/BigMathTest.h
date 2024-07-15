@@ -58,3 +58,12 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestSubtractionWithBarrow : public Test
+{
+public:
+	TestSubtractionWithBarrow();
+	virtual ~TestSubtractionWithBarrow();
+
+	virtual bool Perform() override;
+};
