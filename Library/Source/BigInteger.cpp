@@ -319,10 +319,14 @@ bool BigInteger::SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& b
 	for (uint32_t i = 0; i < bigIntegerA.digitArray.size(); i++)
 	{
 		uint32_t digitA = bigIntegerA[i];
+		if (digitA == 0)
+			continue;
 
 		for (uint32_t j = 0; j < bigIntegerB.digitArray.size(); j++)
 		{
 			uint32_t digitB = bigIntegerB[j];
+			if (digitB == 0)
+				continue;
 
 			uint32_t k = i + j;
 			uint32_t& digit = this->digitArray[k];
@@ -359,8 +363,8 @@ bool BigInteger::SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& 
 		return true;
 	}
 
-	uint32_t degreeA = bigIntegerA.digitArray.size() - 1;
-	uint32_t degreeB = bigIntegerB.digitArray.size() - 1;
+	uint32_t degreeA = uint32_t(bigIntegerA.digitArray.size()) - 1;
+	uint32_t degreeB = uint32_t(bigIntegerB.digitArray.size()) - 1;
 	uint32_t degree = degreeA - degreeB;
 	uint32_t coeficient = this->base - 1;
 
@@ -373,8 +377,11 @@ bool BigInteger::SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& 
 		for (uint32_t i = 0; i < (uint32_t)monomial.digitArray.size(); i++)
 			monomial.digitArray[i] = (i < degree) ? 0 : coeficient;
 
+		// Note that we want the monomial to come first in the multiplication here,
+		// because the multiplication algorithm is quicker this way since the monomial
+		// has mostly zero coeficients in it.
 		BigInteger product;
-		if (!product.SetAsProduct(bigIntegerB, monomial))
+		if (!product.SetAsProduct(monomial, bigIntegerB))
 			return false;
 
 		if (nextNumerator.SetAsDifference(bigIntegerA, product))
