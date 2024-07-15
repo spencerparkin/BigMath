@@ -221,6 +221,11 @@ bool BigInteger::IsEqualTo(const BigInteger& bigInteger) const
 	return true;
 }
 
+bool BigInteger::IsZero() const
+{
+	return this->base > 1 && this->digitArray.size() == 1 && this->digitArray[0] == 0;
+}
+
 bool BigInteger::SetAsSum(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
 {
 	if (bigIntegerA.base != bigIntegerB.base)
@@ -334,7 +339,67 @@ bool BigInteger::SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& b
 
 bool BigInteger::SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB, BigInteger& remainder)
 {
-	return false;
+	if (bigIntegerA.base != bigIntegerB.base)
+		return false;
+
+	if (bigIntegerB.IsZero())
+		return false;
+
+	this->base = bigIntegerA.base;
+	remainder.base = bigIntegerA.base;
+
+	if (bigIntegerA.IsLessThan(bigIntegerB))
+	{
+		this->digitArray.resize(1);
+		this->digitArray[0] = 0;
+
+		if (!remainder.FromBigInteger(bigIntegerA, bigIntegerA.base))
+			return false;
+
+		return true;
+	}
+
+	uint32_t degreeA = bigIntegerA.digitArray.size() - 1;
+	uint32_t degreeB = bigIntegerB.digitArray.size() - 1;
+	uint32_t degree = degreeA - degreeB;
+	uint32_t coeficient = this->base - 1;
+
+	BigInteger monomial, nextNumerator;
+	monomial.base = this->base;
+
+	while (true)
+	{
+		monomial.digitArray.resize(degree + 1);
+		for (uint32_t i = 0; i < (uint32_t)monomial.digitArray.size(); i++)
+			monomial.digitArray[i] = (i < degree) ? 0 : coeficient;
+
+		BigInteger product;
+		if (!product.SetAsProduct(bigIntegerB, monomial))
+			return false;
+
+		if (nextNumerator.SetAsDifference(bigIntegerA, product))
+			break;
+
+		if (coeficient > 1)
+			coeficient--;
+		else
+		{
+			coeficient = this->base - 1;
+			if (degree > 0)
+				degree--;
+			else
+				return false;
+		}
+	}
+
+	BigInteger nextQuotient;
+	if (!nextQuotient.SetAsQuotient(nextNumerator, bigIntegerB, remainder))
+		return false;
+
+	if (!this->SetAsSum(monomial, nextQuotient))
+		return false;
+
+	return true;
 }
 
 bool BigInteger::DigitToChar(uint32_t digit, char& digitChar) const

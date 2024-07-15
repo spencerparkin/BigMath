@@ -108,6 +108,11 @@ namespace BigMath
 		bool IsEqualTo(const BigInteger& bigInteger) const;
 
 		/**
+		 * Return true if and only if this big integer represents zero.
+		 */
+		bool IsZero() const;
+
+		/**
 		 * Compute the sum of the two given big integers and then set this big
 		 * integer to that result.  The given big integers must be of the same base.
 		 * 
@@ -190,6 +195,7 @@ namespace BigMath
 		uint32_t operator[](uint32_t i) const;
 
 	private:
+
 		std::vector<uint32_t> digitArray;
 		uint32_t base;
 	};

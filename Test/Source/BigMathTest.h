@@ -76,3 +76,12 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestDivision : public Test
+{
+public:
+	TestDivision();
+	virtual ~TestDivision();
+
+	virtual bool Perform() override;
+};

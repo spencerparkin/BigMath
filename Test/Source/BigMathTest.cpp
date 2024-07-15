@@ -278,3 +278,63 @@ TestProduct::TestProduct()
 
 	return true;
 }
+
+//---------------------------------- TestDivision ----------------------------------
+
+TestDivision::TestDivision()
+{
+	this->name = "division test";
+}
+
+/*virtual*/ TestDivision::~TestDivision()
+{
+}
+
+/*virtual*/ bool TestDivision::Perform()
+{
+	BigInteger bigIntA, bigIntB;
+
+	uint64_t intA = 328;
+	uint64_t intB = 8487211;
+
+	if (!bigIntA.FromInteger(intA, 10))
+		return false;
+
+	if (!bigIntB.FromInteger(intB, 10))
+		return false;
+
+	BigInteger bigIntQuotient, bigIntRemainder;
+	if (!bigIntQuotient.SetAsQuotient(bigIntA, bigIntB, bigIntRemainder))
+		return false;
+
+	uint64_t quotient = 0;
+	if (!bigIntQuotient.ToInteger(quotient))
+		return false;
+
+	uint64_t remainder = 0;
+	if (!bigIntRemainder.ToInteger(remainder))
+		return false;
+
+	if (quotient != intA / intB)
+		return false;
+
+	if (remainder != intA % intB)
+		return false;
+
+	if (!bigIntQuotient.SetAsQuotient(bigIntB, bigIntA, bigIntRemainder))
+		return false;
+
+	if (!bigIntQuotient.ToInteger(quotient))
+		return false;
+
+	if (!bigIntRemainder.ToInteger(remainder))
+		return false;
+
+	if (quotient != intB / intA)
+		return false;
+
+	if (remainder != intB % intA)
+		return false;
+
+	return true;
+}

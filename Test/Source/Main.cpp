@@ -11,6 +11,7 @@ int main(int argc, char** argv)
 	testArray.push_back(new TestSubtraction());
 	testArray.push_back(new TestSubtractionWithBarrow());
 	testArray.push_back(new TestProduct());
+	testArray.push_back(new TestDivision());
 
 	uint32_t passCount = 0;
 	for (Test* test : testArray)
