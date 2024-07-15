@@ -69,6 +69,9 @@ bool BigInteger::FromInteger(uint64_t integer, uint32_t desiredBase)
 
 	this->base = desiredBase;
 	this->digitArray.clear();
+	if (integer == 0)
+		this->digitArray.push_back(0);
+
 	while (integer > 0)
 	{
 		uint32_t digit = integer % this->base;
@@ -93,7 +96,8 @@ bool BigInteger::ToInteger(uint64_t& integer) const
 		if (!AccumulateWithOverflowCheck(integer, delta))
 			return false;
 
-		basePower *= this->base;
+		if (!MultiplyWithOverflowCheck(basePower, basePower, uint64_t(this->base)))
+			return false;
 	}
 
 	return true;

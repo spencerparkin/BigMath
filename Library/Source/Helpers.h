@@ -37,4 +37,18 @@ namespace BigMath
 		sum += a;
 		return true;
 	}
+
+	/**
+	 * Multiply two integers, but fail if the result would overflow the bit-width of the integers involved.
+	 */
+	template<typename T>
+	bool MultiplyWithOverflowCheck(T& product, T a, T b)
+	{
+		product = a * b;
+		if (product / a != b)
+			return false;
+		if (product / b != a)
+			return false;
+		return true;
+	}
 }
