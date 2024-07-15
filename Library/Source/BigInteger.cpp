@@ -115,11 +115,9 @@ bool BigInteger::FromBigInteger(const BigInteger& bigInteger, uint32_t desiredBa
 		return true;
 	}
 
-#if 0
 	uint64_t intermediateInteger = 0;
 	if (bigInteger.ToInteger(intermediateInteger) && this->FromInteger(intermediateInteger, desiredBase))
 		return true;
-#endif
 
 	BigInteger bigIntegerCopy;
 	if (!bigIntegerCopy.FromBigInteger(bigInteger, bigInteger.base))

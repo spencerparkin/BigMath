@@ -381,8 +381,7 @@ TestBaseConversion::TestBaseConversion()
 
 /*virtual*/ bool TestBaseConversion::Perform()
 {
-	//std::string numberStringA = "DEADBEEFDEADBEEFDEADBEEF";
-	std::string numberStringA = "DEADBEEF";
+	std::string numberStringA = "DEADBEEFDEADBEEFDEADBEEF";
 
 	BigInteger bigIntA;
 	if (!bigIntA.FromString(numberStringA, 16))
