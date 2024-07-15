@@ -198,6 +198,7 @@ TestSubtraction::TestSubtraction()
 
 TestSubtractionWithBarrow::TestSubtractionWithBarrow()
 {
+	this->name = "subtraction with barrow test";
 }
 
 /*virtual*/ TestSubtractionWithBarrow::~TestSubtractionWithBarrow()
@@ -226,6 +227,53 @@ TestSubtractionWithBarrow::TestSubtractionWithBarrow()
 		return false;
 
 	if (diff != intA - intB)
+		return false;
+
+	return true;
+}
+
+//---------------------------------- TestProduct ----------------------------------
+
+TestProduct::TestProduct()
+{
+	this->name = "product test";
+}
+
+/*virtual*/ TestProduct::~TestProduct()
+{
+}
+
+/*virtual*/ bool TestProduct::Perform()
+{
+	BigInteger bigIntA, bigIntB;
+
+	uint64_t intA = 123456789;
+	uint64_t intB = 987654321;
+
+	if (!bigIntA.FromInteger(intA, 10))
+		return false;
+
+	if (!bigIntB.FromInteger(intB, 10))
+		return false;
+
+	BigInteger bigIntProduct;
+	if (!bigIntProduct.SetAsProduct(bigIntA, bigIntB))
+		return false;
+
+	uint64_t product = 0;
+	if (!bigIntProduct.ToInteger(product))
+		return false;
+
+	if (product != intA * intB)
+		return false;
+
+	if (!bigIntProduct.SetAsProduct(bigIntB, bigIntA))
+		return false;
+
+	if (!bigIntProduct.ToInteger(product))
+		return false;
+
+	if (product != intA * intB)
 		return false;
 
 	return true;

@@ -67,3 +67,12 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestProduct : public Test
+{
+public:
+	TestProduct();
+	virtual ~TestProduct();
+
+	virtual bool Perform() override;
+};

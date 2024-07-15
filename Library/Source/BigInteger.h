@@ -132,6 +132,9 @@ namespace BigMath
 		 * Compute the product of the two given big integers and then set this
 		 * big integer to that result.  The given big integers must be of the same base.
 		 * 
+		 * Note that there is a way to get O(n log n) time-complexity here using an FFT,
+		 * but for simplicity of implimentation, we compute this in time O(n^2).
+		 * 
 		 * @param[in] bigIntegerA This is the first operand.
 		 * @param[in] bigIntegerB This is the second operand.
 		 * @return True is returned if successful; false, otherwise.

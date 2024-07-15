@@ -299,7 +299,37 @@ bool BigInteger::SetAsDifference(const BigInteger& bigIntegerA, const BigInteger
 
 bool BigInteger::SetAsProduct(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB)
 {
-	return false;
+	if (bigIntegerA.base != bigIntegerB.base)
+		return false;
+
+	if (bigIntegerA.digitArray.size() == 0 || bigIntegerB.digitArray.size() == 0)
+		return false;
+
+	this->base = bigIntegerA.base;
+
+	this->digitArray.resize(bigIntegerA.digitArray.size() + bigIntegerB.digitArray.size());
+	for (uint32_t& digit : this->digitArray)
+		digit = 0;
+
+	for (uint32_t i = 0; i < bigIntegerA.digitArray.size(); i++)
+	{
+		uint32_t digitA = bigIntegerA[i];
+
+		for (uint32_t j = 0; j < bigIntegerB.digitArray.size(); j++)
+		{
+			uint32_t digitB = bigIntegerB[j];
+
+			uint32_t k = i + j;
+			uint32_t& digit = this->digitArray[k];
+			if (!AccumulateWithOverflowCheck(digit, digitA * digitB))
+				return false;
+		}
+	}
+
+	if (!this->Normalize())
+		return false;
+
+	return true;
 }
 
 bool BigInteger::SetAsQuotient(const BigInteger& bigIntegerA, const BigInteger& bigIntegerB, BigInteger& remainder)
