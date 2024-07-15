@@ -338,3 +338,32 @@ TestDivision::TestDivision()
 
 	return true;
 }
+
+//---------------------------------- TestRemainder ----------------------------------
+
+TestRemainder::TestRemainder()
+{
+	this->name = "remainder test";
+}
+
+/*virtual*/ TestRemainder::~TestRemainder()
+{
+}
+
+/*virtual*/ bool TestRemainder::Perform()
+{
+	uint32_t intA = 123456783;
+
+	BigInteger bigIntA;
+	if (!bigIntA.FromInteger(intA, 10))
+		return false;
+
+	uint32_t remainder = 0;
+	if (!bigIntA.CalcRemainder(10, remainder))
+		return false;
+
+	if (remainder != intA % 10)
+		return false;
+
+	return true;
+}

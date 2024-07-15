@@ -85,3 +85,12 @@ public:
 
 	virtual bool Perform() override;
 };
+
+class TestRemainder : public Test
+{
+public:
+	TestRemainder();
+	virtual ~TestRemainder();
+
+	virtual bool Perform() override;
+};
